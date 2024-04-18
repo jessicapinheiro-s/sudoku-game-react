@@ -17,6 +17,7 @@ const numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 let classificacaoJogo = 'facil';
 const novaMatriz: number[][] = [];
 let indicesSeremIgnorados: number[] = [];
+let arraysAnteriores: number[][] = [];
 
 /*if (classificacaoJogo === 'facil') {
 
@@ -35,24 +36,17 @@ function embaralharArray(array: number[]) {
     return array.sort(() => Math.random() - 0.5);
 }
 
-//console.log(principal);
 
 
 principal.map((linha, index) => {
 
     if (index != 0) {
         const qtdArrayAnteriores = index;
-        const arraysAnteriores = principal.slice(0, qtdArrayAnteriores);
-        ;
+        arraysAnteriores = principal.slice(0, qtdArrayAnteriores);
+        
 
         linha.map((numero, indexNum) => {
-            let indicesSeremIgnorados: number[] = [];
-
-            arraysAnteriores.map(array => {
-                //obtendo todos os números dos arrays anteriores a partir do index do array atual (index do número duplicado)
-                let indexSameNumber = array.indexOf(numero);
-                indicesSeremIgnorados = [...indicesSeremIgnorados, indexSameNumber].filter(indice => indice != -1);
-            })
+            indicesSeremIgnorados = obetNumeros_Utilizados_Linhas_Anteriores(arraysAnteriores, numero);
 
             if (indicesSeremIgnorados.includes(indexNum)) {
                 if (indexNum <= 2) {
@@ -112,6 +106,19 @@ principal.map((linha, index) => {
 })
 
 
+principal.forEach((linha, index, array) => {
+    const proximaLinha = array[index + 1];
+
+    linha.forEach((numero, indexNumero) => {
+        let indiceNumeroProximaLinha = proximaLinha.indexOf(numero);
+        arraysAnteriores = principal.slice(0, index);
+            
+        indicesSeremIgnorados = obetNumeros_Utilizados_Linhas_Anteriores(arraysAnteriores, numero)
+
+        verificar_Duplicidade_Bloco(indicesSeremIgnorados, index, indiceNumeroProximaLinha, indexNumero)
+    })
+})
+
 function verificarBloco(array: number[], indice: number) {
     let matriz: number[][] = [];
 
@@ -135,7 +142,7 @@ function verificarBloco(array: number[], indice: number) {
 
 }
 //Só é execultado caso o indice da linha atual não for igual a 3  ou a 6 ou 0
-function verificarDuplicidadeBloco(array: number[], numeroAtual: number, indiceLinhaAtual: number, indiceNumeroProxLinha: number, indiceNumeroAtual: number) {
+function verificar_Duplicidade_Bloco(array: number[], indiceLinhaAtual: number, indiceNumeroProxLinha: number, indiceNumeroAtual: number) {
     //matriz de indices
     let matriz: number[][] = [];
 
@@ -171,11 +178,9 @@ function verificarDuplicidadeBloco(array: number[], numeroAtual: number, indiceL
     console.log(matriz.find(bloco => bloco != blocoAnterior && bloco != blocoNumeroProxLinha));
 
 }
-
-verificarDuplicidadeBloco([2, 6, 4, 0], 5, 3, 5, 0)
 //necessário mandar o array com os indices ultilizados incluindo 3, 6 ou 0 linha
 
-function retornarIndice(array: number[]) {
+function retornar_Indice(array: number[]) {
 
     let indexNumeroarrayAtual: number[] = [];
 
@@ -185,10 +190,16 @@ function retornarIndice(array: number[]) {
     return indexNumeroarrayAtual;
 }
 
-function verificarPosicaoLinhaBloco(indiceLinha: number) {
+function verificar_Posicao_LinhaBloco(indiceLinha: number) {
     if (indiceLinha === 1 || indiceLinha === 4 || indiceLinha === 7) {
         return 2;
     } else {
         return 3;
     }
 }
+
+function obetNumeros_Utilizados_Linhas_Anteriores(arraysAnt: number[][], numeroAtual: number) {
+    let indicesSeremIgnorados = arraysAnt.map(array => array.indexOf(numeroAtual)).filter(indice => indice != -1);
+    return indicesSeremIgnorados;
+}
+
