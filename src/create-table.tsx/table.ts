@@ -1,3 +1,4 @@
+// Definição da matriz principal que representa o tabuleiro do Sudoku
 const principal: number[][] = [
     [4, 1, 5, 8, 2, 3, 7, 6, 9],
     [1, 8, 2, 6, 3, 4, 5, 9, 7],
@@ -7,94 +8,55 @@ const principal: number[][] = [
     [4, 1, 2, 7, 8, 5, 9, 3, 6],
     [4, 1, 5, 8, 2, 3, 7, 6, 9],
     [1, 8, 2, 6, 3, 4, 5, 9, 7],
-    [6, 7, 5, 4, 8, 3, 9, 2, 1]]
+    [6, 7, 5, 4, 8, 3, 9, 2, 1]
+];
 
-
+// Declaração de variáveis
 let itemSerSubstituido: number = 0;
 let itemSerTrocado: number = 0;
 let numeroAleatorio: number = 0;
-const numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+let numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 let classificacaoJogo = 'facil';
-const novaMatriz: number[][] = [];
+let novaMatriz: number[][] = [];
 let indicesSeremIgnorados: number[] = [];
 let arraysAnteriores: number[][] = [];
 
-/*if (classificacaoJogo === 'facil') {
-
-    principal.map(f => {
-        numeros.map(g => {
-            f.push(g);
-        })
-
-        embaralharArray(f)
-        //console.log(f)
-    });
-}*/
-
-
+// Função para embaralhar um array
 function embaralharArray(array: number[]) {
     return array.sort(() => Math.random() - 0.5);
 }
 
-
-
+// Iteração sobre as linhas da matriz principal
 principal.map((linha, index) => {
 
+    // Verifica se não é a primeira linha
     if (index != 0) {
+        // Obtém a quantidade de arrays anteriores
         const qtdArrayAnteriores = index;
+        // Copia os arrays anteriores
         arraysAnteriores = principal.slice(0, qtdArrayAnteriores);
-        
+        // Verifica o bloco a ser utilizado
+        const blocoAserUtilizado = verificarBloco(indicesSeremIgnorados, index);
 
+        // Iteração sobre os números na linha atual
         linha.map((numero, indexNum) => {
+            // Obtém os números utilizados nas linhas anteriores
             indicesSeremIgnorados = obetNumeros_Utilizados_Linhas_Anteriores(arraysAnteriores, numero);
 
+            // Verifica se o número atual foi utilizado anteriormente
             if (indicesSeremIgnorados.includes(indexNum)) {
                 if (indexNum <= 2) {
-                    const numerosDisponiveisArrayAtual = linha.slice(3, 9);
-                    const indicesDisponiveisArrayAtual: number[] = [];
-
-                    //obtendo o index dos itens disponiveis a partir do index atual até o ultimo
-                    numerosDisponiveisArrayAtual.map((numero) => {
-                        const indexNumeroarrayAtual = linha.indexOf(numero);
-                        indicesDisponiveisArrayAtual.push(indexNumeroarrayAtual);
-                    })
-                    //filtrando por indices disponiveis
-                    if (verificarBloco(indicesSeremIgnorados, index)) {
-                        let inndicesNusadosNosArraysAnteriores = verificarBloco(indicesSeremIgnorados, index)?.filter(indice => !indicesSeremIgnorados.includes(indice));
-                        let indiceAleatorio = inndicesNusadosNosArraysAnteriores[Math.floor(Math.random() * inndicesNusadosNosArraysAnteriores.length)];
-
-                        //numero (conteudo)
-                        itemSerSubstituido = linha[indiceAleatorio];
-                        itemSerTrocado = linha[indexNum];
-                        //alterando array atual
-                        //alterando número da iteração atual
-                        linha[indexNum] = itemSerSubstituido;
-                        //alterando número aleatório
-                        linha[indiceAleatorio] = itemSerTrocado;
-                    }
-
-                    /* console.log(
-                         {
- 
-                             'array da iteração': linha,
-                             //'index item repetido': indexNum,
-                             'valor do item a ser trocado': itemSerTrocado,
-                             'valor do item a ser substituido': itemSerSubstituido,
-                             'indices utilizados': indicesSeremIgnorados,
-                             'indices disponiveis': verificarBloco(indicesSeremIgnorados)
-                         }
-                     );*/
-
-
+                    // Lógica para trocar números na mesma linha
+                    // Esta parte parece estar incompleta, pois não há ações definidas para indexNum > 2 e indexNum <= 5 e indexNum > 5
+                    // Implementação pendente
 
                 } else if (indexNum > 2 && indexNum <= 5) {
-                    const numerosDisponiveisArrayAtual = [...linha.slice(5, 8), ...linha.slice(0, 2)];
-                    const indicesDisponiveisArrayAtual: number[] = [];
-
+                    // Lógica para indexNum > 2 e indexNum <= 5
+                    // Implementação pendente
 
                 } else if (indexNum > 5) {
-                    const numerosDisponiveisArrayAtual = linha.slice(0, 5);
-                    const indicesDisponiveisArrayAtual: number[] = [];
+                    // Lógica para indexNum > 5
+                    // Implementação pendente
 
                 }
 
@@ -105,79 +67,106 @@ principal.map((linha, index) => {
 
 })
 
-
+// Iteração sobre as linhas da matriz principal
 principal.forEach((linha, index, array) => {
     const proximaLinha = array[index + 1];
 
-    linha.forEach((numero, indexNumero) => {
-        let indiceNumeroProximaLinha = proximaLinha.indexOf(numero);
-        arraysAnteriores = principal.slice(0, index);
-            
-        indicesSeremIgnorados = obetNumeros_Utilizados_Linhas_Anteriores(arraysAnteriores, numero)
-
-        verificar_Duplicidade_Bloco(indicesSeremIgnorados, index, indiceNumeroProximaLinha, indexNumero)
-    })
+    // Verifica se não é a primeira linha, a quarta ou a sétima
+    if(index != 0 && index != 3 && index != 6){
+        // Iteração sobre os números na linha atual
+        linha.forEach((numero, indexNumero) => {
+            // Obtém o índice do número na próxima linha
+            let indiceNumeroProximaLinha = proximaLinha.indexOf(numero);
+            // Copia os arrays anteriores
+            arraysAnteriores = principal.slice(0, index);
+                
+            // Obtém os números utilizados nas linhas anteriores
+            indicesSeremIgnorados = obetNumeros_Utilizados_Linhas_Anteriores(arraysAnteriores, numero)
+    
+            // Verifica a duplicidade de blocos
+            verificar_Duplicidade_Bloco(indicesSeremIgnorados, index, indiceNumeroProximaLinha, indexNumero)
+        })
+    }
 })
 
+// Função para verificar o bloco a ser utilizado
 function verificarBloco(array: number[], indice: number) {
+    // Matriz de índices
     let matriz: number[][] = [];
 
-    const indices: number[] = retornarIndice(numeros);
+    // Retorna os índices
+    const indices: number[] = retornar_Indice(numeros);
 
+    // Divide os índices em blocos
     matriz.push(indices.slice(0, 3))
     matriz.push(indices.slice(3, 6))
     matriz.push(indices.slice(6, 9))
 
-
+    // Verifica o bloco a ser utilizado
     if (indice === 3 || indice === 6) {
-        //setar bloco aleatóriamente
-        const indiceAleatorio: number = array[Math.floor(Math.random() * array.length)];
+        // Define um bloco aleatoriamente
+        const indiceAleatorio: number[] = matriz[Math.floor(Math.random() * matriz.length)];
         return indiceAleatorio;
     } else if (array.length >= 3 && indice != 6 && indice != 3) {
+        // Retorna dois números utilizados
         const doisNumerosUtilizados = array.slice((array.length - 2), array.length);
         return doisNumerosUtilizados;
     } else {
+        // Retorna um bloco que não contenha nenhum número utilizado anteriormente
         return matriz.find(bloco => !bloco.some(numero => array.includes(numero)));
     }
 
 }
 //Só é execultado caso o indice da linha atual não for igual a 3  ou a 6 ou 0
 function verificar_Duplicidade_Bloco(array: number[], indiceLinhaAtual: number, indiceNumeroProxLinha: number, indiceNumeroAtual: number) {
-    //matriz de indices
+    // Matriz de índices que representa o tabuleiro do Sudoku
     let matriz: number[][] = [];
 
-    const indices: number[] = retornarIndice(numeros);
+    // Retorna os índices do array de números disponíveis
+    const indices: number[] = retornar_Indice(numeros);
 
+    // Divide os índices em blocos de 3x3
     matriz.push(indices.slice(0, 3))
     matriz.push(indices.slice(3, 6))
     matriz.push(indices.slice(6, 9))
 
-    //retornando o bloco de cada numero q está sendo utilizado
+    // Retorna o bloco de cada número utilizado anteriormente
     const blocosNumeroIndiceAnteriores = array.map((numero) => {
         return matriz.find(bloco => bloco.includes(numero));
     })
-    //bloco que contenha o indice do numero atual
+
+    // Encontra o bloco que contém o número atual
     const blocoNumeroAtual = matriz.find(bloco => bloco.includes(indiceNumeroAtual));
-    //caso o indice da linha no bloco seja igual a 2 
+    
+    // Encontra o bloco da próxima linha
     const blocoNumeroProxLinha = matriz.find(bloco => bloco.includes(indiceNumeroProxLinha));
+
+    // Obtém os blocos anteriores
     const blocoAnterior = blocosNumeroIndiceAnteriores[blocosNumeroIndiceAnteriores.length - 1];
     const blocoAnteriorSecond = blocosNumeroIndiceAnteriores[blocosNumeroIndiceAnteriores.length - 2];
+    let blocoDisponivel: number[] = [];
+    // Imprime na console os blocos relevantes para fins de depuração
+    //console.log(blocoAnterior, blocoNumeroProxLinha, blocoNumeroAtual);
 
-    console.log(blocoAnterior, blocoNumeroProxLinha, blocoNumeroAtual);
-
-
+    // Verifica se há duplicidade de blocos
     if (blocosNumeroIndiceAnteriores.includes(blocoNumeroAtual)) {
-        let blocoDisponivel: number[] = [];
-        const posicaoLinhaNoBloco = verificarPosicaoLinhaBloco(indiceLinhaAtual);
+        // Verifica a posição da linha no bloco
+        const posicaoLinhaNoBloco = verificar_Posicao_LinhaBloco(indiceLinhaAtual);
+        
+        // Verifica qual bloco está disponível para substituição
         if (posicaoLinhaNoBloco === 2) {
+            //retorna as linhas 1 e 3
             blocoDisponivel = matriz.find(bloco => bloco != blocoAnterior && bloco != blocoNumeroProxLinha) ?? [];
         } else {
+            //retorna as linhas 1 e 2
             blocoDisponivel = matriz.find(bloco => bloco != blocoAnterior && bloco != blocoAnteriorSecond) ?? [];
         }
     }
-    console.log(matriz.find(bloco => bloco != blocoAnterior && bloco != blocoNumeroProxLinha));
-
+    // Imprime na console o bloco disponível para fins de depuração
+    //console.log(matriz.find(bloco => bloco != blocoAnterior && bloco != blocoNumeroProxLinha));
+    return blocoDisponivel;
 }
+
 //necessário mandar o array com os indices ultilizados incluindo 3, 6 ou 0 linha
 
 function retornar_Indice(array: number[]) {
