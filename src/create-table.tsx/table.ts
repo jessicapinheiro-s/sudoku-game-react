@@ -35,14 +35,15 @@ principal.map((linha, index) => {
         const qtdArrayAnteriores = index;
         // Copia os arrays anteriores
         arraysAnteriores = principal.slice(0, qtdArrayAnteriores);
-        // Verifica o bloco a ser utilizado
-        const blocoAserUtilizado = verificarBloco(indicesSeremIgnorados, index);
+
 
         // Iteração sobre os números na linha atual
         linha.map((numero, indexNum) => {
             // Obtém os números utilizados nas linhas anteriores
             indicesSeremIgnorados = obetNumeros_Utilizados_Linhas_Anteriores(arraysAnteriores, numero);
-
+            // Verifica o bloco a ser utilizado
+            const blocoAserUtilizado = verificarBloco(indicesSeremIgnorados, index, indexNum);
+            console.log(blocoAserUtilizado)
             // Verifica se o número atual foi utilizado anteriormente
             if (indicesSeremIgnorados.includes(indexNum)) {
                 if (indexNum <= 2) {
@@ -72,25 +73,25 @@ principal.forEach((linha, index, array) => {
     const proximaLinha = array[index + 1];
 
     // Verifica se não é a primeira linha, a quarta ou a sétima
-    if(index != 0 && index != 3 && index != 6){
+    if (index != 0 && index != 3 && index != 6) {
         // Iteração sobre os números na linha atual
         linha.forEach((numero, indexNumero) => {
             // Obtém o índice do número na próxima linha
             let indiceNumeroProximaLinha = proximaLinha.indexOf(numero);
             // Copia os arrays anteriores
             arraysAnteriores = principal.slice(0, index);
-                
+
             // Obtém os números utilizados nas linhas anteriores
             indicesSeremIgnorados = obetNumeros_Utilizados_Linhas_Anteriores(arraysAnteriores, numero)
-    
+
             // Verifica a duplicidade de blocos
-            verificar_Duplicidade_Bloco(indicesSeremIgnorados, index, indiceNumeroProximaLinha, indexNumero)
+            //verificar_Duplicidade_Bloco(indicesSeremIgnorados, index, indiceNumeroProximaLinha, indexNumero)
         })
     }
 })
 
 // Função para verificar o bloco a ser utilizado
-function verificarBloco(array: number[], indice: number) {
+function verificarBloco(array: number[], indice: number, indiceNumero: number) {
     // Matriz de índices
     let matriz: number[][] = [];
 
@@ -102,17 +103,29 @@ function verificarBloco(array: number[], indice: number) {
     matriz.push(indices.slice(3, 6))
     matriz.push(indices.slice(6, 9))
 
+    const blocoNumeroAtual = matriz.find(bloco => bloco.includes(indiceNumero));
+    const blocosDisponiveis = matriz.filter(bloco => bloco != blocoNumeroAtual);
+
     // Verifica o bloco a ser utilizado
     if (indice === 3 || indice === 6) {
         // Define um bloco aleatoriamente
-        const indiceAleatorio: number[] = matriz[Math.floor(Math.random() * matriz.length)];
+        const indiceAleatorio: number[] = blocosDisponiveis[Math.floor(Math.random() * blocosDisponiveis.length)];
+        console.log('indice Aleatório' + indiceAleatorio);
         return indiceAleatorio;
     } else if (array.length >= 3 && indice != 6 && indice != 3) {
         // Retorna dois números utilizados
+        // aqui o bloco disponivel tem que ser retornado de acordo com oq está disponivel dentro do bloco 
+        if(verificar_Posicao_LinhaBloco(indice) === 2){
+
+        }else{
+            
+        }
         const doisNumerosUtilizados = array.slice((array.length - 2), array.length);
+        console.log('dois ultimos numeros utilizados' + doisNumerosUtilizados);
         return doisNumerosUtilizados;
     } else {
         // Retorna um bloco que não contenha nenhum número utilizado anteriormente
+        console.log('bloco sem nenhum numero utilizado' + matriz.find(bloco => !bloco.some(numero => array.includes(numero))));
         return matriz.find(bloco => !bloco.some(numero => array.includes(numero)));
     }
 
@@ -137,7 +150,7 @@ function verificar_Duplicidade_Bloco(array: number[], indiceLinhaAtual: number, 
 
     // Encontra o bloco que contém o número atual
     const blocoNumeroAtual = matriz.find(bloco => bloco.includes(indiceNumeroAtual));
-    
+
     // Encontra o bloco da próxima linha
     const blocoNumeroProxLinha = matriz.find(bloco => bloco.includes(indiceNumeroProxLinha));
 
@@ -152,7 +165,7 @@ function verificar_Duplicidade_Bloco(array: number[], indiceLinhaAtual: number, 
     if (blocosNumeroIndiceAnteriores.includes(blocoNumeroAtual)) {
         // Verifica a posição da linha no bloco
         const posicaoLinhaNoBloco = verificar_Posicao_LinhaBloco(indiceLinhaAtual);
-        
+
         // Verifica qual bloco está disponível para substituição
         if (posicaoLinhaNoBloco === 2) {
             //retorna as linhas 1 e 3
