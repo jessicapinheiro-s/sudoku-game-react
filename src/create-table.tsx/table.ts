@@ -2,14 +2,14 @@
 const principal: number[][] = [
     [4, 1, 5, 8, 2, 3, 7, 6, 9],
     [1, 8, 2, 6, 3, 4, 5, 9, 7],
-    [6, 7, 8, 4, 5, 3, 9, 2, 1],
-    [5, 1, 7, 9, 2, 6, 4, 8, 3],
-    [6, 7, 5, 1, 9, 2, 8, 3, 4],
-    [4, 1, 2, 7, 8, 5, 9, 3, 6],
-    [4, 1, 5, 8, 2, 3, 7, 6, 9],
-    [1, 8, 2, 6, 3, 4, 5, 9, 7],
-    [6, 7, 5, 4, 8, 3, 9, 2, 1]
+    [4, 7, 5, 6, 8, 3, 9, 2, 1]
 ];
+
+[
+    [4, 1, 5, 8, 2, 3, 7, 6, 9], 
+    [1, 8, 2, 6, 3, 4, 5, 9, 7], 
+    [6, 7, 3, 2, 8, 5, 9, 4, 1]
+] 
 
 // Declaração de variáveis
 let itemSerSubstituido: number = 0;
@@ -56,36 +56,43 @@ principal.map((linha, index) => {
             indicesSeremIgnorados = obetNumeros_Utilizados_Linhas_Anteriores(arraysAnteriores, numero);
             // Verifica o bloco a ser utilizado
             const blocoAserUtilizado = verificarBloco(indicesSeremIgnorados, index, indexNum, 1);
-            // Verifica se o número atual foi utilizado anteriormente
+
             if (indicesSeremIgnorados.includes(indexNum)) {
-                if (indexNum <= 2) {
-                    // Lógica para trocar números na mesma linha
-                    // Esta parte parece estar incompleta, pois não há ações definidas para indexNum > 2 e indexNum <= 5 e indexNum > 5
-                    // Implementação pendente
+                if (blocoAserUtilizado) {
+                    const numeroAleatorio = blocoAserUtilizado[Math.floor(Math.random() * blocoAserUtilizado.length)]
+                    console.log('linha antes', linha,
+                        'bloco disponivel', blocoAserUtilizado);
+                    //troca de numeros entre indices
+                    linha[indexNum] = linha[numeroAleatorio]
+                    linha[numeroAleatorio] = numero
 
-                } else if (indexNum > 2 && indexNum <= 5) {
-                    // Lógica para indexNum > 2 e indexNum <= 5
-                    // Implementação pendente
+                    /*console.log(
+                        {
+                            'numero em questão': numero,
+                            'numetro iteração trocado': linha[indexNum],
+                            'numero substitutivo': linha[numeroAleatorio],
+                            'llinha': linha
 
-                } else if (indexNum > 5) {
-                    // Lógica para indexNum > 5
-                    // Implementação pendente
+                        }
+                    )*/
 
                 }
-
             }
+
+
         })
     }
 
 
 })
+console.log(principal)
 
 // Iteração sobre as linhas da matriz principal
 principal.forEach((linha, index, array) => {
     const proximaLinha: number[] = array[index + 1];
 
     // Verifica se não é a primeira linha, a quarta ou a sétima
-    if (index != 0 && index != 3 && index != 6 && proximaLinha !=undefined) {
+    if (index != 0 && index != 3 && index != 6 && proximaLinha != undefined) {
         // Iteração sobre os números na linha atual
         linha.forEach((numero, indexNumero) => {
             // Obtém o índice do número na próxima linha
@@ -94,10 +101,12 @@ principal.forEach((linha, index, array) => {
             arraysAnteriores = principal.slice(0, index);
 
             // Obtém os números utilizados nas linhas anteriores
-            indicesSeremIgnorados = obetNumeros_Utilizados_Linhas_Anteriores(arraysAnteriores, numero)
-
+            indicesSeremIgnorados = obetNumeros_Utilizados_Linhas_Anteriores(arraysAnteriores, numero);
+            
             // Verifica a duplicidade de blocos
-            verificar_Duplicidade_Bloco(indicesSeremIgnorados, index, indiceNumeroProximaLinha, indexNumero)
+            verificar_Duplicidade_Bloco(indicesSeremIgnorados, index, indiceNumeroProximaLinha, indexNumero);
+
+            console.log(indicesSeremIgnorados,  verificar_Duplicidade_Bloco(indicesSeremIgnorados, index, indiceNumeroProximaLinha, indexNumero));
         })
     }
 })
@@ -198,6 +207,7 @@ function verificar_Posicao_LinhaBloco(indiceLinha: number) {
 function obetNumeros_Utilizados_Linhas_Anteriores(arraysAnt: number[][], numeroAtual: number) {
     let indicesSeremIgnorados = arraysAnt.map(array => array.indexOf(numeroAtual)).filter(indice => indice != -1);
     return indicesSeremIgnorados;
+    
 }
 
 function obterBlocoLinhas(matriz: number[][], indiceProxLinha: number, blocosNumeLinhasAnt: (number[] | undefined)[]) {
